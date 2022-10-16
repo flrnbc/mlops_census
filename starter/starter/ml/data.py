@@ -136,40 +136,16 @@ def process_data(
     return X, y, encoder, lb
 
 
-def get_mapping_cols(df: pd.DataFrame, label: str = None) -> dict:
-    """ " Helper function to retrieve columns after transforming to numpy array
-
-    After applying process_data, we loose the column names and the label column.
-    This function returns a dict with key-value pairs (col_name, position of col after removing label col).
-    """
-    cols = list(df.columns)
+def process_data_slice(df: pd.DataFrame, categorical_features: List[str], slice_col: str, slice_value, encoder, lb) -> np.array:
+    """ Create and process a data slice with an encoder. """
     try:
-        cols.remove(label)
-    except ValueError:
-        print(f"{label} not a column.")
-
-    mapping_cols = {}
-    for idx, col in enumerate(cols):
-        mapping_cols[col] = idx
-
-    return mapping_cols
-
-
-def data_slice_from_array(
-    arr: np.array, slice: str, slice_value, mapping_cols: dict
-) -> np.array:
-    """" Get a data slice from a numpy array using a dict to map column names to indices. """
-    try:
-        col = mapping_cols[slice]
-        data_slice = arr[arr[:, col] == slice_value]
-
-    # catch the two possible errors
+        df_slice = df.loc[df[slice_col] == slice_value]
+        assert len(df_slice) > 0
     except KeyError:
-        print(f"{slice} not a key.")
-        data_slice = np.array([])
-    except IndexError:
-        print(f"There is no {col}-th column.")
-        data_slice = np.array([])
+        print(f"{slice_col} is not a column name.")
+    except AssertionError:
+        print(f"Get empty data slice for column {slice_col} and value {slice_value}.")
+    
+    array_slice, y_slice, encoder, lb = process_data(df_slice, categorical_features, label=None, training=False, encoder=encoder, lb=lb)
 
-    finally:
-        return data_slice
+    return array_slice, y_slice 

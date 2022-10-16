@@ -45,25 +45,18 @@ def test_get_categorical_features(test_df):
     assert actual_cat_features_set == cat_features_set
 
 
-def test_data_slice_from_array(test_df):
-    df = pd.DataFrame(
-        {
-            "a": [1, 2, 3, 4, 5, 2, 8],
-            "b": [2, 3, 5, 1, 2, 1, 5],
-            "level": ["med", "med", "high", "high", "low", "mid", np.nan],
-        }
-    )
-    encoder = OneHotEncoder(sparse=False, handle_unknown="ignore")
-    X_categorical = encoder.fit_transform(np.array([df["level"].values]))
-    print(df["level"].values)
-    X, y, encoder, lb = data.process_data(df, categorical_features=["level"], label="b", training=True)
+def test_process_data_slice(test_df):
+    """ Check (the length) of data slices of test_df. """
+    categorical_features = data.get_categorical_features(test_df)
+    first_cat_feature = categorical_features[0]
+    values_dict = test_df[first_cat_feature].value_counts().to_dict()
+    
+    # this step is needed to obtain the encoders
+    X, y, encoder, lb = data.process_data(test_df, categorical_features, "income", training=True)
 
-    # get data slice from X
-    mapping_cols = data.get_mapping_cols(df, label="b")
-    slice = "level"
-    print(encoder.n_features_in_)
-    slice_value = encoder.transform(np.array([["high"]]))[0]  # get one-hot-encoding for "high"
-    data_slice = data.data_slice_from_array(X, slice, slice_value, mapping_cols)
-
-    # test length
-    assert len(data_slice) == 2
+    # check all (lengths of) data slices for the first_cat_feature
+    for value, value_count in values_dict.items():
+        data_slice, y_slice = data.process_data_slice(test_df, categorical_features, first_cat_feature, value, encoder, lb)
+        #print(f"value = {value}: count = {value_count}")
+        assert value_count == len(data_slice)
+    
