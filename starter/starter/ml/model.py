@@ -1,8 +1,13 @@
+import numpy as np
+import pandas as pd
+from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import fbeta_score, precision_score, recall_score
+
+import data
 
 
 # Optional: implement hyperparameter tuning.
-def train_model(X_train, y_train):
+def train_model(X_train: np.array, y_train: np.array):
     """
     Trains a machine learning model and returns it.
 
@@ -17,11 +22,13 @@ def train_model(X_train, y_train):
     model
         Trained machine learning model.
     """
+    lr = LogisticRegression(C=1.0) # TODO: add as parameter
+    lr.fit(X_train, y_train)
 
-    pass
+    return lr
 
 
-def compute_model_metrics(y, preds):
+def compute_model_metrics(y: np.array, preds: np.array) -> tuple:
     """
     Validates the trained machine learning model using precision, recall, and F1.
 
@@ -57,4 +64,9 @@ def inference(model, X):
     preds : np.array
         Predictions from the model.
     """
-    pass
+    return model.predict(X)
+
+
+def slice_performance(model, slice: str, data: pd.Dataframe) -> tuple:
+    """ Compute model performance on categorical slices. """
+    data_slice = data.loc[data['class'] == slice]
