@@ -3,9 +3,6 @@ import pandas as pd
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import fbeta_score, precision_score, recall_score
 
-import data
-
-
 # Optional: implement hyperparameter tuning.
 def train_model(X_train: np.array, y_train: np.array):
     """
@@ -64,9 +61,9 @@ def inference(model, X):
     preds : np.array
         Predictions from the model.
     """
-    return model.predict(X)
-
-
-def slice_performance(model, slice: str, data: pd.Dataframe) -> tuple:
-    """ Compute model performance on categorical slices. """
-    data_slice = data.loc[data['class'] == slice]
+    try: 
+        pred = model.predict(X)
+    except ValueError:
+        print("Not a correct input for the model")
+        return np.array([[]])
+    return pred
