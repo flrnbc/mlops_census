@@ -2,10 +2,9 @@
 
 # NOTE: this works because we included __init__.py files in both ml/ and ml/tests/
 import os
-from pyexpat.errors import XML_ERROR_CANT_CHANGE_FEATURE_ONCE_PARSING
 
-import numpy as np
 import pandas as pd
+import numpy as np
 import pytest
 import starter.ml.data as data
 from sklearn.preprocessing import OneHotEncoder
@@ -43,6 +42,15 @@ def test_get_categorical_features(test_df):
     )
     cat_features_set = set(data.get_categorical_features(test_df))
     assert actual_cat_features_set == cat_features_set
+
+
+def test_categorical_slices_dict():
+    test_dict = {"a": [1, 2, 3, np.nan], "b": ["c", "e", "f", np.nan], "c": [0, np.nan, 0, 1]}
+    test_df = pd.DataFrame(test_dict)
+    slices_dict = data.categorical_slices_dict(test_df, ["a", "b", "c"])
+    assert np.array_equal(slices_dict["a"], np.array([1, 2, 3]))
+    assert np.array_equal(slices_dict["b"], np.array(["c", "e", "f"]))
+    assert np.array_equal(slices_dict["c"], np.array([0, 1]))
 
 
 def test_process_data_slice(test_df):
