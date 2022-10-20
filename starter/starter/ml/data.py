@@ -3,6 +3,7 @@ from typing import List, Dict
 
 import numpy as np
 import pandas as pd
+from sklearn.impute import SimpleImputer
 from sklearn.preprocessing import LabelBinarizer, OneHotEncoder
 
 
@@ -33,21 +34,24 @@ def get_categorical_features(
         col for col in df.columns if len(df[col]) > 0 and col not in exclude
     ]
     for col in non_empty_cols:
-        if df[col].dtype == object and type(df[col][0]) == str:
+        if df[col].dtype == object: # TODO: and type(df[col][0]) == str:
             cat_features.append(col)
     return cat_features
 
 
-def categorical_slices_dict(df: pd.DataFrame) -> dict:
+def categorical_slices_dict(df: pd.DataFrame, cat_features: list, remove_nan: bool=True) -> Dict[str, List]:
     """Returns a dict with cat features-(unique) values as key-value pairs.
 
     The categorical features are the ones returned by get_categorical_features.
     """
-    # NOTE: this "choice" of cat features ensures that we do not have to include checks
-    # if a feature, e.g. provided by a list, is actual a categorical feature
-    cat_features = get_categorical_features()
-    cat_slices_dict = {feature: df[feature].unique() for feature in cat_features}
-    return cat_slices_dict
+    # TODO: cat_features = get_categorical_features() gave a bug...
+    slices_dict = {}
+    for feature in cat_features:
+        if remove_nan:
+            slices_dict[feature] = df[feature].dropna().unique()
+        else:
+            slices_dict[feature] = df[feature].unique()
+    return slices_dict
 
 
 # load data
@@ -115,6 +119,7 @@ def process_data(
         y = np.array([])
 
     X_categorical = X[categorical_features].values
+    print(X_categorical)
     X_continuous = X.drop(*[categorical_features], axis=1)
 
     if training is True:
@@ -142,10 +147,9 @@ def process_data_slice(df: pd.DataFrame, categorical_features: List[str], slice_
         df_slice = df.loc[df[slice_col] == slice_value]
         assert len(df_slice) > 0
     except KeyError:
-        print(f"{slice_col} is not a column name.")
+        raise KeyError(f"{slice_col} is not a column name.")
     except AssertionError:
-        print(f"Get empty data slice for column {slice_col} and value {slice_value}.")
-    
-    array_slice, y_slice, encoder, lb = process_data(df_slice, categorical_features, label=None, training=False, encoder=encoder, lb=lb)
-
+        raise AssertionError(f"Get empty data slice for column {slice_col} and value {slice_value}.")
+        
+    array_slice, y_slice, encoder, lb = process_data(df_slice, categorical_features, label="income", training=False, encoder=encoder, lb=lb)
     return array_slice, y_slice 
