@@ -1,25 +1,8 @@
 """ Tests for starter/data.py """
-
-# NOTE: this works because we included __init__.py files in both ml/ and ml/tests/
-import os
-
 import pandas as pd
 import numpy as np
-import pytest
 import starter.ml.data as data
 from sklearn.preprocessing import OneHotEncoder
-
-@pytest.fixture
-def data_path():
-    """ Ensures that we can run pytest from everywhere
-    in the terminal. 
-    """
-    file_dir = os.path.dirname(os.path.abspath(__file__))
-    return f"{file_dir}/test_data.csv"
-
-@pytest.fixture
-def test_df(data_path):
-    return data.load_data(data_path)
 
 
 def test_load_data(test_df):
