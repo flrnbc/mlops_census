@@ -34,12 +34,14 @@ def get_categorical_features(
         col for col in df.columns if len(df[col]) > 0 and col not in exclude
     ]
     for col in non_empty_cols:
-        if df[col].dtype == object: # TODO: and type(df[col][0]) == str:
+        if df[col].dtype == object:  # TODO: and type(df[col][0]) == str:
             cat_features.append(col)
     return cat_features
 
 
-def categorical_slices_dict(df: pd.DataFrame, cat_features: list, remove_nan: bool=True) -> Dict[str, List]:
+def categorical_slices_dict(
+    df: pd.DataFrame, cat_features: list, remove_nan: bool = True
+) -> Dict[str, List]:
     """Returns a dict with cat features-(unique) values as key-value pairs.
 
     The categorical features are the ones returned by get_categorical_features.
@@ -59,6 +61,7 @@ def load_data(path: str) -> pd.DataFrame:
     p = Path(path)
     # get absolute path
     p = p.resolve()
+    print(p)
     if not p.exists():
         raise FileExistsError
     return pd.read_csv(path)
@@ -141,15 +144,31 @@ def process_data(
     return X, y, encoder, lb
 
 
-def process_data_slice(df: pd.DataFrame, categorical_features: List[str], slice_col: str, slice_value, encoder, lb) -> np.array:
-    """ Create and process a data slice with an encoder. """
+def process_data_slice(
+    df: pd.DataFrame,
+    categorical_features: List[str],
+    slice_col: str,
+    slice_value,
+    encoder,
+    lb,
+) -> np.array:
+    """Create and process a data slice with an encoder."""
     try:
         df_slice = df.loc[df[slice_col] == slice_value]
         assert len(df_slice) > 0
     except KeyError:
         raise KeyError(f"{slice_col} is not a column name.")
     except AssertionError:
-        raise AssertionError(f"Get empty data slice for column {slice_col} and value {slice_value}.")
-        
-    array_slice, y_slice, encoder, lb = process_data(df_slice, categorical_features, label="income", training=False, encoder=encoder, lb=lb)
-    return array_slice, y_slice 
+        raise AssertionError(
+            f"Get empty data slice for column {slice_col} and value {slice_value}."
+        )
+
+    array_slice, y_slice, encoder, lb = process_data(
+        df_slice,
+        categorical_features,
+        label="income",
+        training=False,
+        encoder=encoder,
+        lb=lb,
+    )
+    return array_slice, y_slice

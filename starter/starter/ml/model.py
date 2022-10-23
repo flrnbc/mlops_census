@@ -19,7 +19,7 @@ def train_model(X_train: np.array, y_train: np.array):
     model
         Trained machine learning model.
     """
-    lr = LogisticRegression(C=1.0) # TODO: add as parameter
+    lr = LogisticRegression(C=1.0)  # TODO: add as parameter
     lr.fit(X_train, y_train)
 
     return lr
@@ -48,7 +48,7 @@ def compute_model_metrics(y: np.array, preds: np.array) -> tuple:
 
 
 def inference(model, X):
-    """ Run model inferences and return the predictions.
+    """Run model inferences and return the predictions.
 
     Inputs
     ------
@@ -61,7 +61,7 @@ def inference(model, X):
     preds : np.array
         Predictions from the model.
     """
-    try: 
+    try:
         pred = model.predict(X)
     except ValueError:
         print("Not a correct input for the model")
