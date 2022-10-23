@@ -28,3 +28,4 @@ def test_compute_model_metrics():
 
 def test_inference():
     """ Test inference """
+    
