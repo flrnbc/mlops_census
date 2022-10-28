@@ -9,6 +9,7 @@ import joblib
 import numpy as np
 import pandas as pd
 from sklearn.model_selection import train_test_split
+from pathlib import Path
 
 from ml import data, model
 from ml.data import categorical_slices_dict
@@ -18,8 +19,8 @@ import ml.slice_metrics as slm
 # load data as dataframe
 # so that we can execute the program from "everywhere in the terminal"
 # TODO: better way, e.g. using working dir as env variable?
-curr_file_dir = os.path.dirname(os.path.abspath(__file__))
-DATA_PATH = curr_file_dir + "/../../data/census.csv"
+curr_file_dir = Path(__file__).parent.resolve()
+DATA_PATH = curr_file_dir.parents[1]/"data/census.csv"
 df = data.load_data(DATA_PATH)
 
 # Optional enhancement, use K-fold cross validation instead of a train-test split.
