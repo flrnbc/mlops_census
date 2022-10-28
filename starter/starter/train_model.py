@@ -2,6 +2,7 @@
 from multiprocessing.sharedctypes import Value
 import os
 from typing import Dict, List
+from pathlib import Path
 
 import joblib
 
@@ -30,9 +31,10 @@ LABEL = "income"
 X_train, y_train, encoder, lb = data.process_data(
     X=train, categorical_features=cat_features, label=LABEL, training=True
 )
-# save encoder and lb; TODO: paths as params/envs
-joblib.dump(encoder, "one_hot_encoder.sav")
-joblib.dump(lb, "label_binarizer.sav")
+# save encoder and lb
+encoders_dir = Path(__file__).resolve().parents[2]/"encoders"
+joblib.dump(encoder, encoders_dir/"one_hot_encoder.sav")
+joblib.dump(lb, encoders_dir/"label_binarizer.sav")
 
 # proces test data 
 X_test, y_test, encoder, lb = data.process_data(

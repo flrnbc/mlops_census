@@ -1,6 +1,7 @@
 from multiprocessing.sharedctypes import Value
 import numpy as np
 import pandas as pd
+from pathlib import Path
 import joblib
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import fbeta_score, precision_score, recall_score
@@ -26,13 +27,14 @@ def get_model(X_train: np.array, y_train: np.array, mode: str="train", save: boo
     modes = ["train", "load"]
     if mode not in modes:
         raise ValueError("Not a known mode.")
+    models_dir = Path(__file__).resolve().parents[3]/"models"
     if mode == "train":
         lr = LogisticRegression(C=1.0)  # TODO: add as parameter
         lr.fit(X_train, y_train)
         if save:
-            joblib.dump(lr, "trained_model.sav") # TODO: path as  parameter/env
+            joblib.dump(lr, models_dir/"trained_model.sav") # TODO: path as  parameter/env
     elif mode == "load":
-        lr = joblib.load("trained_model.sav")
+        lr = joblib.load(models_dir/"trained_model.sav")
     return lr
 
 

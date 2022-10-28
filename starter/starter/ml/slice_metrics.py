@@ -7,7 +7,7 @@ from ml import data, model
 from ml.data import categorical_slices_dict, get_categorical_features
 from ml.model import compute_model_metrics
 
-CURRENT_DIR = Path(__file__).parent
+CURRENT_DIR = Path(__file__).parent.resolve()
 
 def slice_value_performance(
     trained_model, test_df: pd.DataFrame, slice: str, value: str, cat_features: list
@@ -17,11 +17,11 @@ def slice_value_performance(
 
     # load encoders (requires training before) from parent dir
     try:
-        parent_dir = CURRENT_DIR # TODO: fix path for saving models
-        encoder = joblib.load(parent_dir/"one_hot_encoder.sav")
-        lb = joblib.load(parent_dir/"label_binarizer.sav")
-    except:
-        raise FileNotFoundError("Please check if encoders were correctly trained.")
+        encoders_dir = CURRENT_DIR.parents[2]/"encoders"
+        encoder = joblib.load(encoders_dir/"one_hot_encoder.sav")
+        lb = joblib.load(encoders_dir/"label_binarizer.sav")
+    except Exception as exc:
+        raise exc
 
     array_slice, y_slice = data.process_data_slice(
         test_df,
