@@ -1,0 +1,4 @@
+outs:
+- md5: 9d39d239aca83ebf52d1e3bc510dd1a9
+  size: 3998
+  path: one_hot_encoder.sav
