@@ -1,10 +1,12 @@
+from multiprocessing.sharedctypes import Value
 import numpy as np
 import pandas as pd
+import joblib
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import fbeta_score, precision_score, recall_score
 
 # Optional: implement hyperparameter tuning.
-def train_model(X_train: np.array, y_train: np.array):
+def get_model(X_train: np.array, y_train: np.array, mode: str="train", save: bool=False):
     """
     Trains a machine learning model and returns it.
 
@@ -14,14 +16,23 @@ def train_model(X_train: np.array, y_train: np.array):
         Training data.
     y_train : np.array
         Labels.
+    mode: str
+        Either 'train' for training or "load" for loading a model
     Returns
     -------
     model
         Trained machine learning model.
     """
-    lr = LogisticRegression(C=1.0)  # TODO: add as parameter
-    lr.fit(X_train, y_train)
-
+    modes = ["train", "load"]
+    if mode not in modes:
+        raise ValueError("Not a known mode.")
+    if mode == "train":
+        lr = LogisticRegression(C=1.0)  # TODO: add as parameter
+        lr.fit(X_train, y_train)
+        if save:
+            joblib.dump(lr, "trained_model.sav") # TODO: path as  parameter/env
+    elif mode == "load":
+        lr = joblib.load("trained_model.sav")
     return lr
 
 
@@ -52,7 +63,7 @@ def inference(model, X):
 
     Inputs
     ------
-    model : ???
+    model : LogisticRegression
         Trained machine learning model.
     X : np.array
         Data used for prediction.

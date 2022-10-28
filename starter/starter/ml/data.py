@@ -43,8 +43,6 @@ def categorical_slices_dict(
     df: pd.DataFrame, cat_features: list, remove_nan: bool = True
 ) -> Dict[str, List]:
     """Returns a dict with cat features-(unique) values as key-value pairs.
-
-    The categorical features are the ones returned by get_categorical_features.
     """
     # TODO: cat_features = get_categorical_features() gave a bug...
     slices_dict = {}
