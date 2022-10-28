@@ -10,7 +10,7 @@ def test_train_model():
     """ Simple smoke test for training a model for binary classification """
     X = np.random.randn(100, 30)
     y = np.random.randint(2, size=100) # binary
-    mod = model.train_model(X, y)
+    mod = model.get_model(X, y)
     assert type(mod) == sklearn.linear_model.LogisticRegression # TODO: store type of model e.g. in params?
 
 
@@ -33,7 +33,7 @@ def test_inference(test_df):
     categorical_features = data.get_categorical_features(test_df)
     X, y, encoder, lb = data.process_data(test_df, categorical_features, "income", training=True)
 
-    mod = model.train_model(X, y)
+    mod = model.get_model(X, y)
     y_pred = model.inference(mod, X)
 
     assert type(model.inference(mod, X)) == np.ndarray
