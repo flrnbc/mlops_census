@@ -3,6 +3,7 @@ import numpy as np
 import pandas as pd
 from pathlib import Path
 import joblib
+import logging
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import fbeta_score, precision_score, recall_score
 
@@ -31,8 +32,10 @@ def get_model(X_train: np.array, y_train: np.array, mode: str="train", save: boo
     if mode == "train":
         lr = LogisticRegression(C=1.0)  # TODO: add as parameter
         lr.fit(X_train, y_train)
+        logging.info(f"{type(lr)} trained")
         if save:
             joblib.dump(lr, models_dir/"trained_model.sav") # TODO: path as  parameter/env
+            logging.info(f"Model saved to {models_dir/'trained_model.sav'}")
     elif mode == "load":
         lr = joblib.load(models_dir/"trained_model.sav")
     return lr

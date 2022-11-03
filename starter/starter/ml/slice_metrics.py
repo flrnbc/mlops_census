@@ -2,6 +2,7 @@ from pathlib import Path
 
 import joblib
 import pandas as pd
+import logging
 
 from ml import data, model
 from ml.data import categorical_slices_dict, get_categorical_features
@@ -89,4 +90,5 @@ def slices_performance(
             save=save,
             output_dir=output_dir
         )
+    logging.info(f"Slices metrics saved to {output_dir}") # TODO: fix path
     return perf_dict
