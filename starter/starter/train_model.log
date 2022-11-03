@@ -1,0 +1,13 @@
+2022-10-31 22:25:44,278 Categorical features: ['workclass', 'education', 'marital-status', 'occupation', 'relationship', 'race', 'sex', 'native-country']
+2022-10-31 22:25:44,351 <class 'sklearn.preprocessing._encoders.OneHotEncoder'> saved to /Users/fbeck/Documents/Rise/python/udacity/MLDevOps/4_Deploying_Scalable_ML_pipeline/nd0821-c3-starter-code/encoders/one_hot_encoder.sav
+2022-10-31 22:25:44,351 <class 'sklearn.preprocessing._label.LabelBinarizer'> saved to /Users/fbeck/Documents/Rise/python/udacity/MLDevOps/4_Deploying_Scalable_ML_pipeline/nd0821-c3-starter-code/encoders/label_binarizer.sav
+2022-10-31 22:25:44,577 <class 'sklearn.linear_model._logistic.LogisticRegression'> trained
+2022-10-31 22:25:44,578 Model saved to /Users/fbeck/Documents/Rise/python/udacity/MLDevOps/4_Deploying_Scalable_ML_pipeline/nd0821-c3-starter-code/models/trained_model.sav
+2022-10-31 22:25:44,582 Precision: 0.6913357400722022, Recall: 0.25147734734077476, fbeta: 0.36880115551275877
+2022-10-31 22:27:16,245 Categorical features: ['workclass', 'education', 'marital-status', 'occupation', 'relationship', 'race', 'sex', 'native-country']
+2022-10-31 22:27:16,318 <class 'sklearn.preprocessing._encoders.OneHotEncoder'> saved to /Users/fbeck/Documents/Rise/python/udacity/MLDevOps/4_Deploying_Scalable_ML_pipeline/nd0821-c3-starter-code/encoders/one_hot_encoder.sav
+2022-10-31 22:27:16,318 <class 'sklearn.preprocessing._label.LabelBinarizer'> saved to /Users/fbeck/Documents/Rise/python/udacity/MLDevOps/4_Deploying_Scalable_ML_pipeline/nd0821-c3-starter-code/encoders/label_binarizer.sav
+2022-10-31 22:27:16,647 <class 'sklearn.linear_model._logistic.LogisticRegression'> trained
+2022-10-31 22:27:16,648 Model saved to /Users/fbeck/Documents/Rise/python/udacity/MLDevOps/4_Deploying_Scalable_ML_pipeline/nd0821-c3-starter-code/models/trained_model.sav
+2022-10-31 22:27:16,652 Precision: 0.717206132879046, Recall: 0.26918158567774936, fbeta: 0.3914458391445839
+2022-10-31 22:27:17,170 Slices metrics saved to slices_metrics
