@@ -4,21 +4,25 @@ import pandas as pd
 from pathlib import Path
 import joblib
 import logging
+from typing import Optional
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import fbeta_score, precision_score, recall_score
 
+CURRENT_DIR = Path(__file__).parent.resolve() # TODO: refactor
+
 # Optional: implement hyperparameter tuning.
-def get_model(X_train: np.array, y_train: np.array, mode: str="train", save: bool=False):
+def get_model(X_train: Optional[np.array]=None, y_train: Optional[np.array]=None, mode: str="train", save: bool=False):
     """
     Trains a machine learning model and returns it.
+    NOTE: the defaults for X_train, y_train enables us to just call get_model(mode="load").
 
     Inputs
     ------
-    X_train : np.array
+    X_train : np.array=None
         Training data.
-    y_train : np.array
+    y_train : np.array=None
         Labels.
-    mode: str
+    mode: str="train"
         Either 'train' for training or "load" for loading a model
     Returns
     -------
@@ -28,7 +32,7 @@ def get_model(X_train: np.array, y_train: np.array, mode: str="train", save: boo
     modes = ["train", "load"]
     if mode not in modes:
         raise ValueError("Not a known mode.")
-    models_dir = Path(__file__).resolve().parents[3]/"models"
+    models_dir = CURRENT_DIR.parents[2]/"models"
     if mode == "train":
         lr = LogisticRegression(C=1.0)  # TODO: add as parameter
         lr.fit(X_train, y_train)
@@ -39,6 +43,21 @@ def get_model(X_train: np.array, y_train: np.array, mode: str="train", save: boo
     elif mode == "load":
         lr = joblib.load(models_dir/"trained_model.sav")
     return lr
+
+
+def get_encoders():
+    """ 
+    Load encoders e.g. for model inference.  
+    NOTE: They only exist after first training.
+    """
+    try:
+        encoders_dir = CURRENT_DIR.parents[2]/"encoders"
+        encoder = joblib.load(encoders_dir/"one_hot_encoder.sav")
+        lb = joblib.load(encoders_dir/"label_binarizer.sav")
+    except Exception as exc:
+        logging.error("Encoders could not be loaded.")
+        raise exc
+    return encoder, lb
 
 
 def compute_model_metrics(y: np.array, preds: np.array) -> tuple:

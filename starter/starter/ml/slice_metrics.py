@@ -6,9 +6,9 @@ import logging
 
 from ml import data, model
 from ml.data import categorical_slices_dict, get_categorical_features
-from ml.model import compute_model_metrics
+from ml.model import compute_model_metrics, get_encoders
 
-CURRENT_DIR = Path(__file__).parent.resolve()
+CURRENT_DIR = Path(__file__).parent.resolve() # TODO: refactor e.g. using config file with root dir
 
 def slice_value_performance(
     trained_model, test_df: pd.DataFrame, slice: str, value: str, cat_features: list
@@ -16,13 +16,8 @@ def slice_value_performance(
     """Compute performance on a (categorical) data slice"""
     # TODO: again: improve this function without processing test_df over and over
 
-    # load encoders (requires training before) from parent dir
-    try:
-        encoders_dir = CURRENT_DIR.parents[2]/"encoders"
-        encoder = joblib.load(encoders_dir/"one_hot_encoder.sav")
-        lb = joblib.load(encoders_dir/"label_binarizer.sav")
-    except Exception as exc:
-        raise exc
+    # load encoders (requires training before)
+    encoder, lb = get_encoders()
 
     array_slice, y_slice = data.process_data_slice(
         test_df,
