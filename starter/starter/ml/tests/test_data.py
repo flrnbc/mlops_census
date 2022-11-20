@@ -1,6 +1,6 @@
 """ Tests for starter/data.py """
-import pandas as pd
 import numpy as np
+import pandas as pd
 import starter.ml.data as data
 from sklearn.preprocessing import OneHotEncoder
 

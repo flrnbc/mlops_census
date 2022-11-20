@@ -1,8 +1,8 @@
+import logging
 from pathlib import Path
 
 import joblib
 import pandas as pd
-import logging
 
 from ml import data, model
 from ml.data import categorical_slices_dict, get_categorical_features
