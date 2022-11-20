@@ -1,14 +1,17 @@
+import logging
 from multiprocessing.sharedctypes import Value
+from pathlib import Path
+from typing import Optional
+
+import joblib
 import numpy as np
 import pandas as pd
-from pathlib import Path
-import joblib
-import logging
-from typing import Optional
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import fbeta_score, precision_score, recall_score
+from starter.ml.data import (get_categorical_features, get_encoders,
+                             process_data)
 
-CURRENT_DIR = Path(__file__).parent.resolve() # TODO: refactor
+CURRENT_DIR = Path(__file__).parent.resolve() # TODO: refactor e.g. using envs, config file or ...
 
 # Optional: implement hyperparameter tuning.
 def get_model(X_train: Optional[np.array]=None, y_train: Optional[np.array]=None, mode: str="train", save: bool=False):
@@ -45,21 +48,6 @@ def get_model(X_train: Optional[np.array]=None, y_train: Optional[np.array]=None
     return lr
 
 
-def get_encoders():
-    """ 
-    Load encoders e.g. for model inference.  
-    NOTE: They only exist after first training.
-    """
-    try:
-        encoders_dir = CURRENT_DIR.parents[2]/"encoders"
-        encoder = joblib.load(encoders_dir/"one_hot_encoder.sav")
-        lb = joblib.load(encoders_dir/"label_binarizer.sav")
-    except Exception as exc:
-        logging.error("Encoders could not be loaded.")
-        raise exc
-    return encoder, lb
-
-
 def compute_model_metrics(y: np.array, preds: np.array) -> tuple:
     """
     Validates the trained machine learning model using precision, recall, and F1.
@@ -82,7 +70,7 @@ def compute_model_metrics(y: np.array, preds: np.array) -> tuple:
     return precision, recall, fbeta
 
 
-def inference(model, X):
+def inference(model, X: np.ndarray) -> np.ndarray:
     """Run model inferences and return the predictions.
 
     Inputs
@@ -98,7 +86,41 @@ def inference(model, X):
     """
     try:
         pred = model.predict(X)
-    except ValueError:
-        print("Not a correct input for the model")
+    except ValueError: # TODO: check for better exceptions
+        logging.error("Model inference failed, returning empty np array.")
         return np.array([[]])
     return pred
+
+
+def inference_pd(model, X: pd.DataFrame, decode: bool=False) -> np.ndarray:
+    """ Run model inference with a dataframe, e.g. from a request.
+    
+    NOTE: This requires the encoders in data/encoders.
+
+    Inputs
+    ------
+    model:
+        Trained model
+    X: pd.DataFrame
+        DataFrame for inference
+    decode: bool
+        If true, use the encoder to transform from numerical to categorical predictions 
+
+    Returns
+    -------
+    pred: np.ndarray
+        Predictions
+    """
+    try: 
+        encoder, lb = get_encoders()
+        cat_features = get_categorical_features(X, exclude=[]) # nothing to exclude because of inference
+        X, y, encoder, lb = process_data(X, categorical_features=cat_features, training=False, encoder=encoder, lb=lb)
+        pred = inference(model, X)
+        if decode:
+            pred = lb.inverse_transform(pred)
+    except Exception as exc: # TODO: better exceptions!
+        logging.error("Inference with a DataFrame failed. Check encoders.")
+        raise exc # TODO: return something else?        
+    return pred
+    
+

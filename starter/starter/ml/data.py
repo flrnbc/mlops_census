@@ -1,11 +1,14 @@
+import logging
 from pathlib import Path
-from typing import List, Dict
+from typing import Dict, List
 
+import joblib
 import numpy as np
 import pandas as pd
 from sklearn.impute import SimpleImputer
 from sklearn.preprocessing import LabelBinarizer, OneHotEncoder
 
+CURRENT_DIR = Path(__file__).parent.resolve() # TODO: refactor
 
 def get_categorical_features(
     df: pd.DataFrame, exclude: List[str] = ["income"]
@@ -170,3 +173,34 @@ def process_data_slice(
         lb=lb,
     )
     return array_slice, y_slice
+
+
+def get_encoders():
+    """ 
+    Load encoders e.g. for model inference.  
+    NOTE: They only exist after first training.
+    """
+    try:
+        encoders_dir = CURRENT_DIR.parents[2]/"encoders"
+        encoder = joblib.load(encoders_dir/"one_hot_encoder.sav")
+        lb = joblib.load(encoders_dir/"label_binarizer.sav")
+    except FileNotFoundError:
+        logging.error("Encoders could not be loaded.")
+        raise FileNotFoundError
+    return encoder, lb
+
+
+# def process_for_inference(data):
+#     """ 
+#     Helper function to process a dataframe before inference.
+#     """
+#     # if we already have a numpy array, return
+#     if isinstance(data, np.ndarray):
+#         return data
+#     # else transform via encoders
+#     cat_features = get_categorical_features(data, exclude=[]) # nothing to exclude because of inference
+#     encoder, lb = get_encoders()
+#     X_np, y_np, encoder, lb = process_data(data, categorical_features=cat_features, training=False, encoder=encoder, lb=lb)
+#     return X_np
+
+    #print("Prediction: " + lb.inverse_transform(pred))

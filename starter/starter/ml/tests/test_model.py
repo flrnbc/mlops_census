@@ -1,10 +1,11 @@
 """ Tests for starter/model.py """
 import numpy as np
-from pytest import approx
+import pandas as pd
 import sklearn
-
-import starter.ml.model as model
 import starter.ml.data as data
+import starter.ml.model as model
+from pytest import approx
+
 
 def test_train_model():
     """ Simple smoke test for training a model for binary classification """
@@ -37,4 +38,37 @@ def test_inference(test_df):
     y_pred = model.inference(mod, X)
 
     assert type(model.inference(mod, X)) == np.ndarray
-    assert model.inference(mod, X).shape == y.shape
+    assert y_pred.shape == y.shape
+
+
+def test_inference_with_encoding(test_df):
+    """ Test inference loading encoders and models.
+    NOTE: this requires saved encoders.
+    """
+    # TODO: include encoders for testing?
+    data = {
+        "age": 53,
+        "workclass": "Federal-gov",
+        "fnlwgt": 8281,
+        "education": "Doctorate",
+        "education_num": 891213,
+        "marital_status": "Divorced",
+        "occupation": "Exec-managerial",
+        "relationship": "Wife",
+        "race": "Black",
+        "sex": "Female",
+        "capital_gain": 1500,
+        "capital_loss": 500,
+        "hours_per_week": 30,
+        "native_country": "Jamaica"
+    }
+    data = {key: [value] for key, value in data.items()}
+    df = pd.DataFrame(data)
+    #df = pd.DataFrame.from_dict(data)
+    mod = model.get_model(mode="load")
+    y_num = model.inference_pd(mod, df)
+    print(f"y_num: {y_num}")
+    y_cat = model.inference_pd(mod, df, decode=True)
+    print(f"y_cat: {y_cat}")
+
+
