@@ -30,6 +30,11 @@ jobs:
         python -m pip install --upgrade pip
         python -m pip install flake8 pytest black
         if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+    - name: Configure AWS Credentials
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        role-to-assume: arn:aws:iam::478084417426:user/flrnbc
+        aws-region: us-east
     - name: DVC pull
       #uses: iterative/setup-dvc@v1
       run: |
@@ -46,9 +51,5 @@ jobs:
     - name: Test with pytest
       run: |
         pytest -vv
-    - name: Configure AWS Credentials
-      uses: aws-actions/configure-aws-credentials@v1
-      with:
-        role-to-assume: arn:aws:iam::478084417426:user/flrnbc
-        aws-region: us-east
+    
     
