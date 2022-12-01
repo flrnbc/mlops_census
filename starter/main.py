@@ -1,5 +1,7 @@
 """Main module to call model inference via FastAPI"""
 import json
+import os
+
 import pandas as pd
 from fastapi import FastAPI
 from pydantic import BaseModel, Field
@@ -73,3 +75,10 @@ async def model_inf(census_req: CensusItem):
     census_req_df = census_req.to_dataframe()
     pred = inference_pd(model, census_req_df, decode=True)
     return json.dumps(pred.tolist()) # needed for FastAPI responses (jsonable_encoder)
+
+
+if "DYNO" in os.environ and os.path.isdir(".dvc"):
+    os.system("dvc config core.no_scm true")
+    if os.system("dvc pull") != 0:
+        exit("dvc pull failed")
+    os.system("rm -r .dvc .apt/usr/lib/dvc")
