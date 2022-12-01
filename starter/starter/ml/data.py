@@ -178,7 +178,9 @@ def process_data_slice(
 def get_encoders():
     """ 
     Load encoders e.g. for model inference.  
-    NOTE: They only exist after first training.
+    NOTE: 
+    - They only exist after first training. 
+    - The (trained) one-hot-encoder ignores unknown input by default.
     """
     try:
         encoders_dir = CURRENT_DIR.parents[2]/"encoders"
