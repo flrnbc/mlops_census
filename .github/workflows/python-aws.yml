@@ -46,3 +46,7 @@ jobs:
       with:
         role-to-assume: arn:aws:iam::478084417426:user/flrnbc
         aws-region: us-east
+    - name: DVC pull
+      uses: iterative/setup-dvc@v1
+      run: |
+        dvc pull 
