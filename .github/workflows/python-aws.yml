@@ -20,6 +20,7 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
+    - uses: iterative/setup-dvc@1
     - name: Set up Python ${{ matrix.python-version }}
       uses: actions/setup-python@v3
       with:
@@ -47,6 +48,6 @@ jobs:
         role-to-assume: arn:aws:iam::478084417426:user/flrnbc
         aws-region: us-east
     - name: DVC pull
-      uses: iterative/setup-dvc@v1
+      # uses: iterative/setup-dvc@v1
       run: |
         dvc pull 
