@@ -1,7 +1,7 @@
 """ Fixtures to share among some tests """
 from pathlib import Path
-import pytest
 
+import pytest
 import starter.ml.data as data
 
 
