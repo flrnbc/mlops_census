@@ -2,12 +2,10 @@ import copy
 import json
 
 import pydantic
-import pytest
+from pytest import fixture
 import requests
 from fastapi.testclient import TestClient
 from main import CensusItem, app
-
-client = TestClient(app)
 
 
 DATA = {
@@ -44,6 +42,11 @@ DATA2 = {
         "native-country": "United-States"
 }
 
+@fixture
+def test_client():
+    # setup client
+    client = TestClient(app)
+    return client
 
 def test_CensusItem():
     """Just a smoke test
@@ -55,33 +58,33 @@ def test_CensusItem():
     print(ci.to_dataframe())
 
 
-def test_api_get():
-    r = requests.get("http://127.0.0.1:8000/")
+def test_api_get(test_client):
+    r = test_client.get("/")
     assert r.status_code == 200
     assert r.json() == "Welcome to the ML model server!"
  
 
-def test_api_post():
-    r = requests.post("http://127.0.0.1:8000/inference/", json=DATA)
+def test_api_post(test_client):
+    r = test_client.post("/inference/", json=DATA)
     assert r.status_code == 200
     assert r.json() == '[">50K"]'
 
 
-def test_api_post2():
+def test_api_post2(test_client):
     # TODO: refactor these two tests?!
-    r = requests.post("http://127.0.0.1:8000/inference/", json=DATA2)
+    r = test_client.post("/inference/", json=DATA2)
     assert r.status_code == 200
     assert r.json() == '[">50K"]'
 
 
-def test_api_post_failure():
+def test_api_post_failure(test_client):
     FALSE_DATA = copy.deepcopy(DATA) # deep copy just to be sure (i.e. not side effects on DATA)
     del FALSE_DATA["age"]
     FALSE_DATA["agw"] = 53 # add typo
-    r = requests.post("http://127.0.0.1:8000/inference/", json=FALSE_DATA)
+    r = test_client.post("/inference/", json=FALSE_DATA)
     assert r.status_code == 422
     FALSE_DATA["age"] = 67 # add another entry
-    r = requests.post("http://127.0.0.1:8000/inference/", json=DATA)
+    r = test_client.post("/inference/", json=DATA)
     assert r.status_code == 200 # ok because all necessary data is provided 
 
 
