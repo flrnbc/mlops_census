@@ -7,5 +7,6 @@ import starter.starter.ml.data as data
 
 @pytest.fixture(scope="session")
 def test_df():
-    test_dir = Path(__file__).parent.resolve()
+    current_dir = Path(__file__).parent
+    test_dir = current_dir / "starter" / "starter" / "ml" / "tests"
     return data.load_data(test_dir/"test_data.csv")
