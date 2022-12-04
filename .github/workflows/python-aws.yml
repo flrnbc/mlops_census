@@ -33,8 +33,8 @@ jobs:
     - name: Configure AWS Credentials
       uses: aws-actions/configure-aws-credentials@v1
       with:
-        role-to-assume: arn:aws:iam::478084417426:user/flrnbc
-        aws-region: us-east
+        role-to-assume: arn:aws:iam::234562172387:role/S3_Github_actions
+        aws-region: us-east-1
     - name: DVC pull
       #uses: iterative/setup-dvc@v1
       run: |

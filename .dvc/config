@@ -3,4 +3,4 @@
 ['remote "localremote"']
     url = ../../local/remote
 ['remote "s3bucket"']
-    url = s3://census-mlops
+    url = s3://flrnbc-mlopscensus
