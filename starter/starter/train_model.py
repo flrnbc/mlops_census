@@ -10,10 +10,10 @@ import pandas as pd
 from sklearn.model_selection import train_test_split
 from pathlib import Path
 
-from ml import data, model
-from ml.data import categorical_slices_dict
-from ml.model import compute_model_metrics
-import ml.slice_metrics as slm
+from starter.starter.ml import data, model
+from starter.starter.ml.data import categorical_slices_dict
+from starter.starter.ml.model import compute_model_metrics
+import starter.starter.ml.slice_metrics as slm
 
 # setup logging
 logging.basicConfig(filename='train_model.log', level=logging.INFO, format='%(asctime)s %(message)s')

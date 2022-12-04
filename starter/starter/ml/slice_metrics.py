@@ -4,9 +4,9 @@ from pathlib import Path
 import joblib
 import pandas as pd
 
-from ml import data, model
-from ml.data import categorical_slices_dict, get_categorical_features
-from ml.model import compute_model_metrics, get_encoders
+from starter.starter.ml import data, model
+from starter.starter.ml.data import categorical_slices_dict, get_categorical_features
+from starter.starter.ml.model import compute_model_metrics, get_encoders
 
 CURRENT_DIR = Path(__file__).parent.resolve() # TODO: refactor e.g. using config file with root dir
 

@@ -2,8 +2,8 @@
 import numpy as np
 import pandas as pd
 import sklearn
-import starter.ml.data as data
-import starter.ml.model as model
+import starter.starter.ml.data as data
+import starter.starter.ml.model as model
 from pytest import approx
 
 

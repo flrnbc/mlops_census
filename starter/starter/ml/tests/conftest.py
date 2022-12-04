@@ -2,7 +2,7 @@
 from pathlib import Path
 
 import pytest
-import starter.ml.data as data
+import starter.starter.ml.data as data
 
 
 @pytest.fixture(scope="session")

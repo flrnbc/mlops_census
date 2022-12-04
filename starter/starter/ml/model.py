@@ -8,7 +8,7 @@ import numpy as np
 import pandas as pd
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import fbeta_score, precision_score, recall_score
-from starter.ml.data import (get_categorical_features, get_encoders,
+from starter.starter.ml.data import (get_categorical_features, get_encoders,
                              process_data)
 
 CURRENT_DIR = Path(__file__).parent.resolve() # TODO: refactor e.g. using envs, config file or ...

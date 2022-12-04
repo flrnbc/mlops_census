@@ -5,7 +5,7 @@ import pydantic
 from pytest import fixture
 import requests
 from fastapi.testclient import TestClient
-from main import CensusItem, app
+from starter.main import CensusItem, app
 
 
 DATA = {
