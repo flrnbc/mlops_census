@@ -36,9 +36,9 @@ DATA2 = {
         "relationship": "Husband",
         "race": "White",
         "sex": "Male",
-        "capital-gain": 10000,
-        "capital-loss": 0,
-        "hours-per-week": 45,
+        "capital-gain": 100,
+        "capital-loss": 500,
+        "hours-per-week": 35,
         "native-country": "United-States"
 }
 
@@ -74,7 +74,7 @@ def test_api_post2(test_client):
     # TODO: refactor these two tests?!
     r = test_client.post("/inference/", json=DATA2)
     assert r.status_code == 200
-    assert r.json() == '[">50K"]'
+    assert r.json() == '["<=50K"]'
 
 
 def test_api_post_failure(test_client):
